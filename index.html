@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notepad Pro — Phase 1 Blueprint</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="side-panel" id="sidePanel">
+      <div class="brand">
+        <span class="brand-mark">NP</span>
+        <div>
+          <h1>Notepad Pro</h1>
+          <p>Secure workspace</p>
+        </div>
+      </div>
+      <button class="primary-btn" id="setupKeyBtn">Set up Gemini Key</button>
+      <div class="status-card" id="keyStatusCard">
+        <h2>Gemini Key</h2>
+        <p id="keyStatusText">No key configured.</p>
+      </div>
+      <div class="status-card">
+        <h2>Quick Actions</h2>
+        <button class="ghost-btn" data-action="create-note">+ Create Note</button>
+        <button class="ghost-btn" data-action="create-notebook">+ Create Notebook</button>
+        <button class="ghost-btn" id="manualSyncBtn">Manual Sync</button>
+      </div>
+      <div class="status-card">
+        <h2>Interaction State</h2>
+        <select id="stateSelect">
+          <option value="success">Success</option>
+          <option value="loading">Loading</option>
+          <option value="empty">Empty</option>
+          <option value="error">Error</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="top-bar">
+        <button class="icon-btn" id="menuBtn">☰</button>
+        <h2 id="screenTitle">Landing / Dashboard</h2>
+        <button class="icon-btn" id="searchIconBtn">🔍</button>
+      </header>
+
+      <section class="security-banner" id="securityBanner">
+        <strong>Security:</strong> All notes encrypt with Gemini key. Full note access requires unlock.
+        <button id="unlockBtn">Unlock</button>
+      </section>
+
+      <section class="screen active" id="screen-home" data-screen="home">
+        <div class="quick-actions-row">
+          <button class="primary-btn" data-action="create-note">+ Create Note</button>
+          <button class="secondary-btn" data-nav="search">Encrypted Search</button>
+        </div>
+        <div class="search-input-wrap">
+          <input id="homeSearch" type="search" placeholder="Search notes, tags, dates..." />
+        </div>
+        <div class="cards-grid" id="noteList"></div>
+        <p class="placeholder hidden" id="homePlaceholder">No notes yet. Create your first secure note.</p>
+      </section>
+
+      <section class="screen" id="screen-editor" data-screen="editor">
+        <div class="editor-top">
+          <input id="noteTitle" type="text" placeholder="Untitled secure note" />
+          <button class="primary-btn" id="saveNoteBtn">Save & Encrypt</button>
+        </div>
+        <div class="editor-toolbar">
+          <button data-format="bold"><b>B</b></button>
+          <button data-format="italic"><i>I</i></button>
+          <button data-format="underline"><u>U</u></button>
+          <button data-format="insertUnorderedList">• List</button>
+          <button data-format="formatBlock" data-value="pre">Code</button>
+        </div>
+        <div id="noteBody" class="editor-body" contenteditable="true" aria-label="Note editor">Start typing…</div>
+        <div class="editor-meta">
+          <input id="tagInput" type="text" placeholder="Tags (comma separated)" />
+          <input id="folderInput" type="text" placeholder="Folder / notebook" />
+        </div>
+      </section>
+
+      <section class="screen" id="screen-search" data-screen="search">
+        <div class="search-input-wrap">
+          <input id="globalSearch" type="search" placeholder="Encrypted search by text, tag or date" />
+          <button class="secondary-btn" id="openFilterBtn">Filters</button>
+        </div>
+        <div class="filter-chips" id="chipContainer"></div>
+        <div class="cards-grid" id="searchResults"></div>
+        <p class="placeholder hidden" id="searchPlaceholder">No notes match your search.</p>
+      </section>
+
+      <section class="screen" id="screen-settings" data-screen="settings">
+        <div class="settings-list">
+          <article>
+            <h3>Account & Access</h3>
+            <button class="ghost-btn" id="regenKeyBtn">Regenerate Gemini Key</button>
+            <button class="ghost-btn" id="backupKeyBtn">Backup / Recovery</button>
+            <label><input type="checkbox" id="biometricToggle" checked /> Enable Biometric Access</label>
+          </article>
+          <article>
+            <h3>Themes & Display</h3>
+            <label><input type="checkbox" id="themeToggle" /> Dark Mode</label>
+          </article>
+          <article>
+            <h3>Notifications</h3>
+            <label><input type="checkbox" checked /> Reminders</label>
+            <label><input type="checkbox" checked /> Task Alerts</label>
+          </article>
+          <article>
+            <h3>Sync & Backup</h3>
+            <label><input type="checkbox" checked /> Cloud Sync</label>
+            <button class="secondary-btn" id="conflictBtn">Conflict Resolution</button>
+          </article>
+        </div>
+      </section>
+
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-nav="home">Home</button>
+        <button class="nav-item" data-nav="search">Notebooks</button>
+        <button class="nav-item" data-nav="editor">Tasks</button>
+        <button class="nav-item" data-nav="settings">Settings</button>
+      </nav>
+    </main>
+  </div>
+
+  <dialog id="authDialog">
+    <form method="dialog">
+      <h3>Gemini Key Authentication</h3>
+      <p>Enter passphrase to unlock encrypted previews.</p>
+      <input id="keyInput" type="password" placeholder="Gemini key passphrase" required />
+      <menu>
+        <button value="cancel">Cancel</button>
+        <button id="authConfirmBtn" value="default">Unlock</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="toastDialog" class="toast"></dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
